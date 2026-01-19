@@ -531,6 +531,22 @@
       const papers = document.querySelectorAll('.paper-item');
       const indicatorsContainer = document.querySelector('.carousel-indicators');
       
+      // Make paper items clickable
+      papers.forEach(paper => {
+        paper.addEventListener('click', function(e) {
+          // Don't navigate if clicking on a link directly
+          if (e.target.tagName === 'A' || e.target.closest('a')) {
+            return;
+          }
+          
+          // Find the first link (title/project page link)
+          const firstLink = paper.querySelector('a');
+          if (firstLink && firstLink.href) {
+            window.location.href = firstLink.href;
+          }
+        });
+      });
+      
       // Initialize carousel
       function initCarousel() {
         if (window.innerWidth <= 768) {
