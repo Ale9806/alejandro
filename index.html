@@ -19,6 +19,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
   </head>
   <body>
+    <!-- Triangle Mesh Background -->
+    <canvas id="triangle-mesh" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;"></canvas>
+    
     <table style="width:100%;max-width:900px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
       <tbody>
         <tr style="padding:0px">
@@ -26,7 +29,7 @@
             <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
               <tbody>
                 <tr style="padding:0px" class="profile-row">
-                  <td style="padding:2.5%;width:55%;vertical-align:middle" class="profile-text-cell">
+                  <td style="padding:20px 2.5%;width:55%;vertical-align:middle" class="profile-text-cell">
                     <p class="name" style="text-align: center;">
                       Alejandro Lozano
                     </p>
@@ -55,7 +58,7 @@
                       <a href="https://x.com/Ale9806_">Twitter</a> &nbsp;/&nbsp;
                     </p>
                   </td>
-                  <td style="padding:2.5%;width:30%;max-width:30%" class="profile-photo-cell">
+                  <td style="padding:20px 2.5%;width:30%;max-width:30%" class="profile-photo-cell">
                     <a href="images/alejandro.jpg">
                       <img 
                         style="width:100%; max-width:100%; border-radius:50%;" 
@@ -109,7 +112,7 @@
             <!-- Selected Publications -->
               <tbody>
                 <tr>
-                  <td style="padding:20px;width:100%;vertical-align:middle"> 
+                  <td style="padding:20px 2.5%;width:100%;vertical-align:middle"> 
                     <h2>Selected Publications</h2>
                     <em> (*) denotes co-first authorship</em>. For a full list of publications, please check my <a href="https://scholar.google.com/citations?user=EBPnTFMAAAAJ&hl=en">Google Scholar</a> 
                     <!-- <p>
@@ -461,10 +464,10 @@
               <div class="carousel-nav carousel-next" onclick="changePaper(1)">›</div>
               <div class="carousel-indicators"></div>
             </div>
-            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <table class="teaching-section" style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
               <tbody>
                 <tr>
-                  <td style="padding:20px;width:100%;vertical-align:middle">
+                  <td style="padding:20px 2.5%;width:100%;vertical-align:middle">
                     <h2>Teaching</h2>
                     <ul class="teaching-list">
                       <li class="teaching-item">
@@ -756,6 +759,181 @@
         // Small delay to ensure map container is rendered
         setTimeout(initVisitorMap, 100);
       });
+    </script>
+    
+    <!-- Triangle Mesh Script -->
+    <script>
+      (function() {
+        const canvas = document.getElementById('triangle-mesh');
+        const ctx = canvas.getContext('2d');
+        let scrollY = 0;
+        let time = 0;
+        let needsRedraw = true;
+        
+        // Set canvas size
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          needsRedraw = true;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Track scroll (but don't use it for movement - only for color effects if needed)
+        window.addEventListener('scroll', () => {
+          scrollY = window.pageYOffset || window.scrollY || 0;
+        }, { passive: true });
+        
+        // Triangle mesh parameters - larger and more visible
+        const triangleSize = 60;
+        const spacing = 80; // More spacing between triangles
+        
+        // Generate triangle points
+        function createTriangle(x, y, size, angle = 0) {
+          const h = size * 0.866; // height of equilateral triangle
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          
+          // Center point
+          const cx = x + size / 2;
+          const cy = y - h / 3;
+          
+          // Three vertices
+          const v1 = { x: x - cx, y: y - cy };
+          const v2 = { x: x + size - cx, y: y - cy };
+          const v3 = { x: x + size / 2 - cx, y: y - h - cy };
+          
+          // Rotate around center
+          const rotate = (v) => ({
+            x: v.x * cos - v.y * sin + cx,
+            y: v.x * sin + v.y * cos + cy
+          });
+          
+          return [rotate(v1), rotate(v2), rotate(v3)];
+        }
+        
+        // Draw triangle with gradient
+        function drawTriangle(triangle, color, strokeColor) {
+          ctx.beginPath();
+          ctx.moveTo(triangle[0].x, triangle[0].y);
+          ctx.lineTo(triangle[1].x, triangle[1].y);
+          ctx.lineTo(triangle[2].x, triangle[2].y);
+          ctx.closePath();
+          
+          // Fill with gradient
+          const gradient = ctx.createLinearGradient(
+            triangle[0].x, triangle[0].y,
+            triangle[2].x, triangle[2].y
+          );
+          gradient.addColorStop(0, color);
+          gradient.addColorStop(1, color.replace(/[\d\.]+\)$/g, '0.3)'));
+          
+          ctx.fillStyle = gradient;
+          ctx.fill();
+          
+          // Stroke
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        
+        // Draw function - very slow animation
+        function draw() {
+          // Clear canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+          // Very slow automatic movement
+          time += 0.05; // Very slow increment
+          
+          // Calculate offsets based only on very slow time movement (no scroll effect)
+          const triangleHeight = triangleSize * 0.866; // height of equilateral triangle
+          const rowHeight = triangleHeight + spacing;
+          const slowTimeOffset = time * 0.5; // Very slow time-based movement
+          const offsetY = slowTimeOffset % rowHeight;
+          const offsetX = Math.sin(time * 0.01) * 2; // Very subtle horizontal drift
+          
+          // No rotation
+          const rotation = 0;
+          
+          // Create proper tessellation - triangles that fit together without overlap
+          const cols = Math.ceil(canvas.width / (triangleSize + spacing)) + 2;
+          const rows = Math.ceil(canvas.height / rowHeight) + 2;
+          
+          for (let row = -1; row < rows; row++) {
+            for (let col = -1; col < cols; col++) {
+              const isUpsideDown = row % 2 === 1;
+              
+              // Offset odd rows by half triangle width to create tessellation, with spacing
+              const x = col * (triangleSize + spacing) + (isUpsideDown ? (triangleSize + spacing) / 2 : 0) + offsetX;
+              const y = row * rowHeight - offsetY;
+              
+              // Create triangle based on orientation
+              let triangle;
+              if (isUpsideDown) {
+                // Downward pointing triangle
+                const topY = y;
+                triangle = [
+                  { x: x, y: topY },
+                  { x: x + triangleSize, y: topY },
+                  { x: x + triangleSize / 2, y: topY + triangleHeight }
+                ];
+              } else {
+                // Upward pointing triangle
+                const bottomY = y + triangleHeight;
+                triangle = [
+                  { x: x, y: bottomY },
+                  { x: x + triangleSize, y: bottomY },
+                  { x: x + triangleSize / 2, y: bottomY - triangleHeight }
+                ];
+              }
+              
+              // Apply rotation only if needed (subtle)
+              if (Math.abs(rotation) > 0.001) {
+                const cx = x + triangleSize / 2;
+                const cy = y + triangleHeight / 2;
+                const cos = Math.cos(rotation);
+                const sin = Math.sin(rotation);
+                
+                triangle = triangle.map(v => ({
+                  x: (v.x - cx) * cos - (v.y - cy) * sin + cx,
+                  y: (v.x - cx) * sin + (v.y - cy) * cos + cy
+                }));
+              }
+              
+              // Dynamic color based on scroll and position only
+              const scrollIntensity = (Math.sin(scrollY * 0.003) + 1) * 0.5;
+              const wave1 = Math.sin(x * 0.02);
+              const wave2 = Math.cos(y * 0.02);
+              const positionEffect = (wave1 + wave2) * 0.5;
+              
+              // More noticeable colors with blue tint
+              const baseR = 200 + scrollIntensity * 30;
+              const baseG = 210 + scrollIntensity * 25;
+              const baseB = 240 + scrollIntensity * 15;
+              
+              const r = Math.floor(baseR + positionEffect * 20);
+              const g = Math.floor(baseG + positionEffect * 15);
+              const b = Math.floor(baseB + positionEffect * 10);
+              
+              // 99.375% transparent (0.625% opacity - 50% more transparent)
+              const alpha = 0.00625;
+              const color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+              const strokeColor = `rgba(26, 115, 232, ${alpha * 1.5})`;
+              
+              drawTriangle(triangle, color, strokeColor);
+            }
+          }
+        }
+        
+        // Continuous slow animation
+        function animate() {
+          draw();
+          requestAnimationFrame(animate);
+        }
+        
+        // Start animation
+        animate();
+      })();
     </script>
   </body>
 </html>
