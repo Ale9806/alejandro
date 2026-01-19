@@ -421,3 +421,20 @@ span.highlight {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+/* Visitor Map Styles */
+#visitor-map {
+  margin-top: 10px;
+  background-color: #f5f5f5;
+}
+
+#visitor-map .leaflet-container {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+}
+
+/* Responsive map adjustments */
+@media (max-width: 768px) {
+  #visitor-map {
+    height: 400px !important;
+  }
+}

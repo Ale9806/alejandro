@@ -496,9 +496,35 @@
                 </tr>
               </tbody>
             </table>
+            
+            <!-- Visitor Map Section -->
+            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+              <tbody>
+                <tr>
+                  <td style="padding:20px;width:100%;vertical-align:middle">
+                    <h2>Visitor Map</h2>
+                    <p style="margin-bottom: 15px; color: #666;">
+                      See where visitors are coming from around the world
+                    </p>
+                    <div id="visitor-map" style="width:100%; height:500px; border-radius:8px; overflow:hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+                    <p style="text-align:center; margin-top: 10px; font-size: 12px; color: #999;">
+                      <span id="visitor-count">0</span> unique locations visited
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </td>
         </tr>
     </table>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     
     <script>
       let currentPaperIndex = 0;
@@ -607,6 +633,113 @@
           }
         }
       }
+    </script>
+    
+    <!-- Visitor Map Script -->
+    <script>
+      // Initialize the map
+      function initVisitorMap() {
+        // Create map centered on the world with globe view
+        const map = L.map('visitor-map', {
+          center: [20, 0],
+          zoom: 2,
+          minZoom: 2,
+          maxZoom: 5,
+          worldCopyJump: true
+        });
+        
+        // Add a world map style (using CartoDB Positron for a cleaner globe look)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>',
+          maxZoom: 5,
+          subdomains: 'abcd'
+        }).addTo(map);
+        
+        // Get stored visitor locations
+        let visitorLocations = JSON.parse(localStorage.getItem('visitorLocations') || '[]');
+        
+        // Get current visitor's location
+        fetch('https://ipapi.co/json/')
+          .then(response => response.json())
+          .then(data => {
+            if (data.city && data.country_name) {
+              // Use city center coordinates instead of exact location
+              // Add small random offset to city center for privacy (within ~5km)
+              const cityLat = parseFloat(data.latitude) || 0;
+              const cityLng = parseFloat(data.longitude) || 0;
+              
+              // Add small random offset (approximately 0.05 degrees = ~5km)
+              const offsetLat = (Math.random() - 0.5) * 0.1;
+              const offsetLng = (Math.random() - 0.5) * 0.1;
+              
+              const location = {
+                lat: cityLat + offsetLat,
+                lng: cityLng + offsetLng,
+                city: data.city || 'Unknown',
+                country: data.country_name || 'Unknown',
+                timestamp: new Date().toISOString()
+              };
+              
+              // Check if this city already exists (same city and country)
+              const exists = visitorLocations.some(loc => 
+                loc.city === location.city && loc.country === location.country
+              );
+              
+              if (!exists) {
+                visitorLocations.push(location);
+                // Keep only last 500 locations to avoid localStorage limits
+                if (visitorLocations.length > 500) {
+                  visitorLocations = visitorLocations.slice(-500);
+                }
+                localStorage.setItem('visitorLocations', JSON.stringify(visitorLocations));
+              }
+            }
+            
+            // Plot all locations on the map
+            plotLocations(map, visitorLocations);
+          })
+          .catch(error => {
+            console.error('Error fetching location:', error);
+            // Still plot existing locations even if current location fetch fails
+            plotLocations(map, visitorLocations);
+          });
+      }
+      
+      function plotLocations(map, locations) {
+        // Update visitor count (count unique cities)
+        const uniqueCities = new Set(locations.map(loc => `${loc.city}, ${loc.country}`));
+        document.getElementById('visitor-count').textContent = uniqueCities.size;
+        
+        // Create a marker cluster group for better performance
+        const markers = L.markerClusterGroup({
+          maxClusterRadius: 80,
+          spiderfyOnMaxZoom: true,
+          showCoverageOnHover: false,
+          zoomToBoundsOnClick: true,
+          disableClusteringAtZoom: 4
+        });
+        
+        // Add markers for each location (city-level)
+        locations.forEach(location => {
+          const marker = L.marker([location.lat, location.lng], {
+            title: `${location.city}, ${location.country}`
+          });
+          const popupText = `<b>${location.city}, ${location.country}</b><br>Visited: ${new Date(location.timestamp).toLocaleDateString()}`;
+          marker.bindPopup(popupText);
+          markers.addLayer(marker);
+        });
+        
+        map.addLayer(markers);
+        
+        // Keep the map at world view (zoom level 2)
+        map.setView([20, 0], 2);
+      }
+      
+      // Initialize map when page loads
+      window.addEventListener('load', () => {
+        // Small delay to ensure map container is rendered
+        setTimeout(initVisitorMap, 100);
+      });
     </script>
   </body>
 </html>
