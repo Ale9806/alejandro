@@ -25,12 +25,21 @@
           <td style="padding:0px">
             <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
               <tbody>
-                <tr style="padding:0px">
-                  <td style="padding:2.5%;width:55%;vertical-align:middle">
+                <tr style="padding:0px" class="profile-row">
+                  <td style="padding:2.5%;width:55%;vertical-align:middle" class="profile-text-cell">
                     <p class="name" style="text-align: center;">
                       Alejandro Lozano
                     </p>
-            
+                    <div class="profile-photo-mobile">
+                      <a href="images/alejandro.jpg">
+                        <img 
+                          style="width:100%; max-width:100%; border-radius:50%;" 
+                          alt="profile photo" 
+                          src="images/alejandro.jpg" 
+                          class="hoverZoomLink profile-photo" 
+                          alt="Alejandro Lozano headshot">
+                      </a>
+                    </div>
                     <p>I am a PhD candidate at the Stanford Artificial Intelligence Laboratory working on vision-language foundation models. I'm fortunate to be advised by <a href="https://ai.stanford.edu/~syyeung/">Serena Yeung-Levy</a> and to be supported by the <a href="https://arcinstitute.org/">Arc Institute</a>. I am also deeply grateful to NVIDIA, Amazon, and HAI for generously funding  my research.
                     </p>
                     <p>
@@ -38,22 +47,21 @@
                     </p>
 
                  
-                    <p style="text-align:center">
+                    <p class="social-links" style="text-align:center">
                       <!-- <a href="CV">CV</a> &nbsp;/&nbsp; -->
                       <a href="https://scholar.google.com/citations?user=EBPnTFMAAAAJ&hl=en">Scholar</a> &nbsp;/&nbsp;
-                     
-                      <a href="https://github.com/Ale9806/">Github</a> &nbsp;/&nbsp;
+                      <a href="https://github.com/alejandro-lozano-dev">Github</a> &nbsp;/&nbsp;
                       <a href="https://www.linkedin.com/in/ale9806/">LinkedIn</a>  &nbsp;/&nbsp;
-                       <a href="https://x.com/Ale9806_">Twitter</a> &nbsp;/&nbsp;
+                      <a href="https://x.com/Ale9806_">Twitter</a> &nbsp;/&nbsp;
                     </p>
                   </td>
-                  <td style="padding:2.5%;width:30%;max-width:30%">
+                  <td style="padding:2.5%;width:30%;max-width:30%" class="profile-photo-cell">
                     <a href="images/alejandro.jpg">
                       <img 
                         style="width:100%; max-width:100%; border-radius:50%;" 
                         alt="profile photo" 
                         src="images/alejandro.jpg" 
-                        class="hoverZoomLink" 
+                        class="hoverZoomLink profile-photo" 
                         alt="Alejandro Lozano headshot">
                     </a>
                   </td>
@@ -65,42 +73,34 @@
 
 
             <!-- RECENT NEWS -->
-            <section id="news" style="padding:20px;width:100%;vertical-align:middle;;margin-top:-60px;">
-              <h2>Recent News:</h2>
-              <table style="width: 40%; border-collapse: collapse;">
-                <style>
-                  @media (max-width: 1000px) {
-                    table {
-                      width: 100%;
-                    }
-                  }
-                </style>
-
-<tr>
-  <td style="padding:1px;">[June 2025]</td>
-  <td style="padding:1px;">I am interning at Microsoft Research.</td>
-</tr>
-                <tr>
-                  <td style="padding:1px;">[March 2025]</td>
-                  <td style="padding:1px;">Awarded Nvidia grant.</td>
-                </tr>
-                <tr>
-                  <td style="padding:1px;">[February 2025]</td>
-                  <td style="padding:1px;">3 papers accepted to CVPR 2025.</td>
-                </tr>
-                <tr>
-                  <td style="padding:1px;">[January 2025]</td>
-                  <td style="padding:1px;">2 papers accepted to ICLR 2025</td>
-                </tr>
-                <tr>
-                  <td style="padding:1px;">[December 2024]</td>
-                  <td style="padding:1px;">1 paper accepted to NEJM AI.</td>
-                </tr>
-                <tr>
-                  <td style="padding:1px;">[September 2024]</td>
-                  <td style="padding:1px;">1 paper accepted to NeurIPS 2024.</td>
-                </tr>
-              </table>
+            <section id="news" class="news-section">
+              <h2>Recent News</h2>
+              <ul class="news-list">
+                <li class="news-item">
+                  <span class="news-date">[June 2025]</span>
+                  <span class="news-content">I am interning at Microsoft Research.</span>
+                </li>
+                <li class="news-item">
+                  <span class="news-date">[March 2025]</span>
+                  <span class="news-content">Awarded Nvidia grant.</span>
+                </li>
+                <li class="news-item">
+                  <span class="news-date">[February 2025]</span>
+                  <span class="news-content">3 papers accepted to CVPR 2025.</span>
+                </li>
+                <li class="news-item">
+                  <span class="news-date">[January 2025]</span>
+                  <span class="news-content">2 papers accepted to ICLR 2025</span>
+                </li>
+                <li class="news-item">
+                  <span class="news-date">[December 2024]</span>
+                  <span class="news-content">1 paper accepted to NEJM AI.</span>
+                </li>
+                <li class="news-item">
+                  <span class="news-date">[September 2024]</span>
+                  <span class="news-content">1 paper accepted to NeurIPS 2024.</span>
+                </li>
+              </ul>
             </section>
 
             <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
@@ -119,13 +119,17 @@
                 </tr>
               </tbody>
             </table>
-            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <!-- Carousel Container for Mobile -->
+            <div class="papers-carousel-container">
+              <div class="carousel-nav carousel-prev" onclick="changePaper(-1)">‹</div>
+              <div class="papers-carousel-wrapper">
+            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;" class="papers-table">
               <tbody>
 
               
 
                 <!-- Paper: Biomedica  -->
-                <tr bgcolor="#ffffff">
+                <tr bgcolor="#ffffff" class="paper-item">
                   <td style="padding:20px;width:25%;vertical-align:middle">
                     <div class="one">
                       <img src='images/fig-biomedica.jpeg' width="200">
@@ -166,7 +170,7 @@
                 </tr>
 
                     <!-- Paper: SR -->
-                   <tr bgcolor="#ffffff">
+                   <tr bgcolor="#ffffff" class="paper-item">
                     <td style="padding:20px;width:25%;vertical-align:middle">
                      <div class="one" >
                           <img src='images/med_evidence.png' width="200" style="padding-top: 30px;">
@@ -202,7 +206,7 @@
 
 
                 <!-- Paper: MicroVQA  -->
-                <tr bgcolor="#ffffff">
+                <tr bgcolor="#ffffff" class="paper-item">
                   <td style="padding:20px;width:25%;vertical-align:middle">
                     <div class="one">
                       <img src='images/fig_microvqa.png'   width="200">
@@ -253,7 +257,7 @@
 
 
                    <!-- Paper: TTE -->
-                   <tr bgcolor="#ffffff">
+                   <tr bgcolor="#ffffff" class="paper-item">
                     <td style="padding:20px;width:25%;vertical-align:middle">
                       <div class="one">
                         <img src='images/tte.png'   width="200" style="padding-top: 25px;">
@@ -286,7 +290,7 @@
 
 
                       <!-- Paper: Video Action Differencing  -->
-                      <tr bgcolor="#ffffff">
+                      <tr bgcolor="#ffffff" class="paper-item">
                         <td style="padding:20px;width:25%;vertical-align:middle">
                           <div class="one">
                             <img src='images/fig1_left-viddiff.jpg'   width="200">
@@ -320,7 +324,7 @@
 
         
                 <!-- Paper: MicroBench -->
-                <tr bgcolor="#ffffff">
+                <tr bgcolor="#ffffff" class="paper-item">
                   <td style="padding:20px;width:25%;vertical-align:middle">
                     <div class="one">
                       <img src='images/fig_ubench.jpg'   width="200">
@@ -356,7 +360,7 @@
 
 
                        <!-- Paper: Medalign -->
-                <tr bgcolor="#ffffff">
+                <tr bgcolor="#ffffff" class="paper-item">
                   <td style="padding:20px;width:25%;vertical-align:middle">
                     <div class="one">
                       <img src='images/medalign.png'   width="200" style="padding-top: -20px;">
@@ -385,7 +389,7 @@
                 
                 
                 <!-- Paper: CLINFO  -->
-                <tr bgcolor="#ffffff">
+                <tr bgcolor="#ffffff" class="paper-item">
                   <td style="padding:20px;width:25%;vertical-align:middle">
                     <div class="one">
                       <img src='images/clinfo.png'   width="200">
@@ -414,7 +418,7 @@
                 </tr>
 
                 <!-- Paper: O2vae  -->
-                <tr bgcolor="#ffffff">
+                <tr bgcolor="#ffffff" class="paper-item">
                   <td style="padding:20px;width:25%;vertical-align:middle">
                     <div class="one">
                       <img src='images/fig_o2vae.png'   width="200">
@@ -453,18 +457,29 @@
               <!-- Footer attribution for  the website template-->
               </tbody>
             </table>
+              </div>
+              <div class="carousel-nav carousel-next" onclick="changePaper(1)">›</div>
+              <div class="carousel-indicators"></div>
+            </div>
             <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
               <tbody>
                 <tr>
                   <td style="padding:20px;width:100%;vertical-align:middle">
                     <h2>Teaching</h2>
-                  <ul style="list-style-type: none; padding-left: 0; margin: 0;">
-  <li>Stanford AI4ALL Medical AI Lead Mentor Stanford, 2024 and 2025.</li>
-  <li>Head Teaching assistant, CS 235: <em>Computational Methods for Biomedical Image Analysis and Interpretation</em>, Stanford 2025.</li>
-  <li>Teaching assistant, CS 235: <em>Computational Methods for Biomedical Image Analysis and Interpretation</em>, Stanford 2022.</li>
-</ul>
-
-                
+                    <ul class="teaching-list">
+                      <li class="teaching-item">
+                        <div class="teaching-role">Stanford AI4ALL Medical AI Lead Mentor</div>
+                        <div class="teaching-meta">Stanford, 2024 and 2025</div>
+                      </li>
+                      <li class="teaching-item">
+                        <div class="teaching-role">Head Teaching assistant, CS 235: <em>Computational Methods for Biomedical Image Analysis and Interpretation</em></div>
+                        <div class="teaching-meta">Stanford, 2025</div>
+                      </li>
+                      <li class="teaching-item">
+                        <div class="teaching-role">Teaching assistant, CS 235: <em>Computational Methods for Biomedical Image Analysis and Interpretation</em></div>
+                        <div class="teaching-meta">Stanford, 2022</div>
+                      </li>
+                    </ul>
                   </td>
                 </tr>
               </tbody>
@@ -484,5 +499,114 @@
           </td>
         </tr>
     </table>
+    
+    <script>
+      let currentPaperIndex = 0;
+      const papers = document.querySelectorAll('.paper-item');
+      const indicatorsContainer = document.querySelector('.carousel-indicators');
+      
+      // Initialize carousel
+      function initCarousel() {
+        if (window.innerWidth <= 768) {
+          // Mobile view - show carousel
+          papers.forEach((paper, index) => {
+            paper.classList.remove('active');
+            if (index === 0) {
+              paper.classList.add('active');
+            }
+          });
+          
+          // Create indicators
+          if (indicatorsContainer) {
+            indicatorsContainer.innerHTML = '';
+            papers.forEach((paper, index) => {
+              const indicator = document.createElement('button');
+              indicator.className = 'carousel-indicator' + (index === 0 ? ' active' : '');
+              indicator.setAttribute('aria-label', `Go to paper ${index + 1}`);
+              indicator.onclick = () => goToPaper(index);
+              indicatorsContainer.appendChild(indicator);
+            });
+          }
+        } else {
+          // Desktop view - show all papers
+          papers.forEach(paper => {
+            paper.classList.add('active');
+          });
+        }
+      }
+      
+      function changePaper(direction) {
+        if (window.innerWidth > 768) return; // Only work on mobile
+        
+        currentPaperIndex += direction;
+        
+        if (currentPaperIndex < 0) {
+          currentPaperIndex = papers.length - 1;
+        } else if (currentPaperIndex >= papers.length) {
+          currentPaperIndex = 0;
+        }
+        
+        goToPaper(currentPaperIndex);
+      }
+      
+      function goToPaper(index) {
+        if (window.innerWidth > 768) return; // Only work on mobile
+        
+        currentPaperIndex = index;
+        
+        papers.forEach((paper, i) => {
+          paper.classList.remove('active');
+          if (i === index) {
+            paper.classList.add('active');
+          }
+        });
+        
+        // Update indicators
+        const indicators = indicatorsContainer.querySelectorAll('.carousel-indicator');
+        indicators.forEach((indicator, i) => {
+          indicator.classList.remove('active');
+          if (i === index) {
+            indicator.classList.add('active');
+          }
+        });
+      }
+      
+      // Initialize on load
+      window.addEventListener('load', initCarousel);
+      window.addEventListener('resize', initCarousel);
+      
+      // Touch swipe support
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      const carouselWrapper = document.querySelector('.papers-carousel-wrapper');
+      if (carouselWrapper) {
+        carouselWrapper.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        carouselWrapper.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        }, { passive: true });
+      }
+      
+      function handleSwipe() {
+        if (window.innerWidth > 768) return; // Only work on mobile
+        
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            // Swipe left - next paper
+            changePaper(1);
+          } else {
+            // Swipe right - previous paper
+            changePaper(-1);
+          }
+        }
+      }
+    </script>
   </body>
 </html>
