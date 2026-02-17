@@ -272,6 +272,13 @@ span.highlight {
   background-color: transparent;
 }
 
+/* Profile photo - keep circular (not oval) */
+.profile-photo-cell .profile-photo,
+.profile-photo-mobile .profile-photo {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
 /* Hide mobile photo on desktop */
 .profile-photo-mobile {
   display: none;
